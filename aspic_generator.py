@@ -397,6 +397,8 @@ defeasible_rules = [
     Rule([Literal('c', is_negative=True)], Literal('r4', is_negative=True), is_defeasible=True, reference='r9')
 ]
 
+rules = strict_rules + defeasible_rules
+
 # Print the rules and their contrapositions
 
 contraposition_rules = create_contrapositions(strict_rules, len(strict_rules) + len(defeasible_rules))
