@@ -36,6 +36,7 @@ def main(rules):
     conclusion = ag.Literal(conclusion[1:], is_negative=True) if conclusion.startswith("~") else ag.Literal(conclusion)
     
     is_defeasible = st.sidebar.checkbox("Is Defeasible")
+    #burden_depth = st.sidebar.number_input("Max Depth of burden", 3)
 
     if st.sidebar.button("Add Rule"):
         # Process the form inputs and create a rule
@@ -153,6 +154,29 @@ def main(rules):
         plot = ag.generate_histogram(defeats)
         st.header("Histogramme")
         st.pyplot(plot)
+    if st.sidebar.button('''# Burden'''):
+        strict_rules = ag.strict_rules
+        contraposition_rules = ag.create_contrapositions(strict_rules, len(rules))
+        af = ag.ArgumentationFramework(rules + contraposition_rules)
+        attacks = af.get_attacks()
+        undercuts = af.detect_undercuts()
+        rebuttal_attacks = ag.find_rebuttal_attacks(af.get_arguments())
+        for literal, arguments in rebuttal_attacks.items():
+            rebuttal_attacks[literal] = list(set(rebuttal_attacks[literal]))
+        extended_rebuttals = ag.extend_argument_chains(af.get_arguments(), rebuttal_attacks)
+        rebuttals_tuples = ag.tuple_of_rubutlals(extended_rebuttals,af.get_arguments())
+        counter = 0
+        all_attacks = []
+        for attacked , attackers in rebuttals_tuples.items():
+            all_attacks.extend(attackers)
+        all_attacks.extend(undercuts)
+        defeats = ag.find_defeated(all_attacks)
+        burden_depth = st.sidebar.number_input("Max Depth of burden", 3)
+        burden_numbers = af.compute_burdens_with_defeats(defeats, max_depth=burden_depth)
+        ranked_arguments = af.rank_arguments_with_defeats(burden_numbers)
+        st.header("Burden")
+        for arg in ranked_arguments:
+            st.write(f"Argument: {arg}, Burden: {burden_numbers[arg]}")
         
 
 if __name__ == "__main__":
