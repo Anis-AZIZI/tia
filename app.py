@@ -171,10 +171,10 @@ def main(rules):
             all_attacks.extend(attackers)
         all_attacks.extend(undercuts)
         defeats = ag.find_defeated(all_attacks)
-        burden_depth = st.sidebar.number_input("Max Depth of burden", 3)
+        burden_depth = st.sidebar.number_input("Max Depth of burden", placeholder=3, min_value=1, max_value=10, value=3)
         burden_numbers = af.compute_burdens_with_defeats(defeats, max_depth=burden_depth)
         ranked_arguments = af.rank_arguments_with_defeats(burden_numbers)
-        st.header("Burden")
+        st.write(burden_depth)
         for arg in ranked_arguments:
             st.write(f"Argument: {arg}, Burden: {burden_numbers[arg]}")
         
