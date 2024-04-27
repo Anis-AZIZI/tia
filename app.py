@@ -19,7 +19,7 @@ def main(rules):
     st.write('''
              # Welcome to the Argumentation Framework Generator!
                 ## This is a tool to generate argumentation frameworks using the aspicGenerator library. 
-                #### By AZIZI Anis,BOUDJEBBOUR Maya,RABEHI Amira
+                #### By AZIZI Anis  BOUDJEBBOUR Maya RABEHI Amira
              ''')
     
     # Set up the sidebar
@@ -56,7 +56,7 @@ def main(rules):
         display_rules(rules)
     
     # Button to execute create_contrapositions
-    if st.sidebar.button("Create Contrapositions"):
+    if st.sidebar.button(''' Create Contrapositions rules '''):
         # Generate contraposition rules
         strict_rules = ag.strict_rules
         contraposition_rules = ag.create_contrapositions(strict_rules, len(rules))
@@ -67,14 +67,45 @@ def main(rules):
         display_rules(contraposition_rules)
     
     # Button to show arguments
-    if st.sidebar.button("Show Arguments"):
+    if st.sidebar.button(''' # generate Arguments'''):
         # Generate arguments
         strict_rules = ag.strict_rules
         contraposition_rules = ag.create_contrapositions(strict_rules, len(rules))
         af = ag.ArgumentationFramework(rules + contraposition_rules)
         arguments = af.get_arguments()
-        st.header("Arguments")
+        st.header(''' Arguments''')
         show_all_arguments(arguments)
+
+    if st.sidebar.button('''generate Attacks'''):
+        # Generate attacks
+        strict_rules = ag.strict_rules
+        contraposition_rules = ag.create_contrapositions(strict_rules, len(rules))
+        af = ag.ArgumentationFramework(rules + contraposition_rules)
+        attacks = af.get_attacks()
+        st.write(''' # Attacks''')
+        undercuts = af.detect_undercuts()
+        st.write('''## Undercuts''')
+        for attacker, target in undercuts:
+            printed = f'{attacker.name} undercuts {target.name}'
+            st.write(printed)
+        # generate rebuttals too
+        st.write('''# rebuttals''')
+        rebuttal_attacks = ag.find_rebuttal_attacks(af.get_arguments())
+        for literal, arguments in rebuttal_attacks.items():
+            rebuttal_attacks[literal] = list(set(rebuttal_attacks[literal]))
+        extended_rebuttals = ag.extend_argument_chains(af.get_arguments(), rebuttal_attacks)
+        for literal, arguments in extended_rebuttals.items():
+            st.write(f'* Rebuttal attacks against {literal}:')
+            st.write(extended_rebuttals[literal].__repr__())
+            st.write("nombre d'occurence:", len(extended_rebuttals[literal]))
+        rebuttals_tuples = ag.tuple_of_rubutlals(extended_rebuttals,af.get_arguments())
+        counter = 0
+        for attacked , attackers in rebuttals_tuples.items():
+            st.write(f'* Rebuttal attacks against {attacked}:')
+            st.write(attackers.__repr__())
+            st.write("nombre d'occurence:", len(attackers))
+            counter += len(attackers)
+        st.write("nombre total d'occurence:", counter)
 
 if __name__ == "__main__":
     # Initialize an empty list to store rules
