@@ -402,15 +402,6 @@ rules = strict_rules + defeasible_rules
 # Print the rules and their contrapositions
 
 contraposition_rules = create_contrapositions(strict_rules, len(strict_rules) + len(defeasible_rules))
-print("Original Strict Rules:")
-for rule in strict_rules:
-    print(rule)
-print("Original Defeasible Rules:")
-for rule in defeasible_rules:
-    print(rule)
-print("Contrapositions:")
-for rule in contraposition_rules:
-    print(rule)
 
 # # Examples based on the provided information
 # a = Literal('a')
@@ -464,10 +455,7 @@ af = ArgumentationFramework(all_rules)
 #af.combine_arguments()  # This should create more complex arguments by combining existing ones
 
 # Step 4: Display Results
-print("All arguments:")
-af.show_all_arguments()
-# af.show_detailed_arguments()
-print("Total number of arguments:", af.count_arguments())
+
 # A1 : -> a
 # A2 : => b
 # A3 : => ¬c
@@ -532,9 +520,6 @@ print("Total number of arguments:", af.count_arguments())
 undercuts = af.detect_undercuts()
 rebuttals = af.detect_rebuttals()
 
-print("Undercuts:")
-for attacker, target in undercuts:
-    print(f"{attacker} undercuts {target}")
 #Expecting 
     # (A6,A7)
     # (A6,A11)
@@ -559,12 +544,10 @@ args = af.get_arguments()
 conclusions = [arg.top_rule.conclusion for arg in args]
 conclusions = list(set(conclusions))
 conclusion_Args = {}
-print(conclusions)
+
 for conclusion in conclusions:
     conclusion_Args[conclusion] = [arg.name for arg in args if arg.top_rule.conclusion == conclusion]
-for conclusion in conclusions:
-    if conclusion_Args.get("¬"+str(conclusion)) is not None :
-        print("rebuttals for ",conclusion)
+
 
 def find_contrary_literals(arguments):
     conclusions = [arg.top_rule.conclusion for arg in arguments]
@@ -579,8 +562,6 @@ def find_contrary_literals(arguments):
     contrary_literals = list(set(contrary_literals))
     return contrary_literals
 
-
-print(find_contrary_literals(args))
 def find_rebuttal_attacks(arguments):
     contrary_literals = find_contrary_literals(arguments)
     rebuttal_attacks = {}
@@ -595,7 +576,6 @@ rebuttal_attacks = find_rebuttal_attacks(args)
 for literal, arguments in rebuttal_attacks.items():
     rebuttal_attacks[literal] = list(set(rebuttal_attacks[literal]))
 
-print(rebuttal_attacks)
 def find_sub_arguments( main_argument):
     sub_arguments = []
 
@@ -634,10 +614,10 @@ extended_rebuttals = rebuttal_attacks
 # remove duplicate from each list 
 for literal, arguments in extended_rebuttals.items():
     extended_rebuttals[literal] = list(set(arguments))
-for literal, arguments in extended_rebuttals.items():
-    print(f"Rebuttal attacks against {literal}:")
-    for arg in arguments:
-        print(f"- Argument {arg}")
+#for literal, arguments in extended_rebuttals.items():
+#    print(f"Rebuttal attacks against {literal}:")
+#    for arg in arguments:
+#        print(f"- Argument {arg}")
 
 def find_arguments_with_conclusion(arguments, conclusion):
     return [arg for arg in arguments if arg.top_rule.conclusion == conclusion]
@@ -653,7 +633,7 @@ def tuple_of_rubutlals(rebuttal_attacks,args):
                     rebuttal_tuples[literal] = []
                 rebuttal_tuples[literal].append((element1,element2))
                 count += 1
-    print("Number of rebuttal attacks:```````````````````````````````````", count)
+    #print("Number of rebuttal attacks:```````````````````````````````````", count)
 
     return rebuttal_tuples
 #rebuttal_tuples = tuple_of_rubutlals(extended_rebuttals,args)
@@ -672,8 +652,6 @@ def delete_arguments_with_same_conclusion(rebuttal_attacks={}):
 saved_rebuttal = find_rebuttal_attacks(args)
 
 
-#final_rebut = tuple_of_rubutlals(extended_rebuttals,args)
-print("Final Rebuttal Attacks:")
 
 
 def extend_argument_chains(argument_set, argument_dict):
@@ -691,22 +669,13 @@ def extend_argument_chains(argument_set, argument_dict):
 # Extend the rebuttal attacks with sub-arguments
 ext_rebuttals = extend_argument_chains(args, rebuttal_attacks)
 
-for literal, arguments in ext_rebuttals.items():
-    print(f"Rebuttal attacks against {literal}:")
-    print(rebuttal_attacks[literal])
-    print("Extended:")
-    print(ext_rebuttals[literal])
+#for literal, arguments in ext_rebuttals.items():
+#    print(f"Rebuttal attacks against {literal}:")
+#    print(rebuttal_attacks[literal])
+#    print("Extended:")
+#    print(ext_rebuttals[literal])
 final_tuple = tuple_of_rubutlals(ext_rebuttals,args)
-print(final_tuple)
-count = 0
-for literal, arguments in final_tuple.items():
-    count += len(arguments)
-print("Number of rebuttal attacks:", count)
-# count for each litteral
-for literal, arguments in final_tuple.items():
-    print(f"Rebuttal attacks against {literal}:")
-    lenght = len(arguments)
-    print(lenght)
+#print(final_tuple)
 
 
 # fonction qui cherche toutes les régles defeasible d'une attaque en utilisant la fonction get_defeasible_rules_for_argument
@@ -734,10 +703,10 @@ defeasible_rules_for_rebuttal_attacks = find_defeasible_rules_for_rebuttal_attac
 # Undercuts renvoie une chaine de caractere il faut des tuples pour simplifier je vais donc essayer de le faire avec rebuts
 
 
-for arg, defeasible_rules in defeasible_rules_for_rebuttal_attacks.items():
-    print(f"Defeasible rules for rebuttal attack against argument {arg.name}:")
-    for rule in defeasible_rules:
-        print(rule)
+#for arg, defeasible_rules in defeasible_rules_for_rebuttal_attacks.items():
+    #print(f"Defeasible rules for rebuttal attack against argument {arg.name}:")
+    #for rule in defeasible_rules:
+        #print(rule)
 
 def weakest(rule_set1, rule_set2):
     """
@@ -821,7 +790,7 @@ def generate_histogram(defeats):
     plt.title('Histogram of Argument Defeat In-Degree')
 
     # Show the plot
-    plt.show()
+    #plt.show()
     return plt
 
 # def create_argument_graph(arguments, attacks):
@@ -866,12 +835,11 @@ def generate_histogram(defeats):
 
 
 defeats = find_defeated(attacks)
-print(len(defeats))
 generate_histogram(defeats)
 # create_argument_graph(args, attacks)
 
 burden_numbers = af.compute_burdens_with_defeats(defeats, max_depth=3)
 ranked_arguments = af.rank_arguments_with_defeats(burden_numbers)
-for arg in ranked_arguments:
-    print(f"Argument: {arg}, Burden: {burden_numbers[arg]}")
+#for arg in ranked_arguments:
+#    print(f"Argument: {arg}, Burden: {burden_numbers[arg]}")
 
