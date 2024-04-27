@@ -822,6 +822,7 @@ def generate_histogram(defeats):
 
     # Show the plot
     plt.show()
+    return plt
 
 # def create_argument_graph(arguments, attacks):
 #     # Create a directed graph

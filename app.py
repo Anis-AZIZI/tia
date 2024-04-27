@@ -100,12 +100,60 @@ def main(rules):
             st.write("nombre d'occurence:", len(extended_rebuttals[literal]))
         rebuttals_tuples = ag.tuple_of_rubutlals(extended_rebuttals,af.get_arguments())
         counter = 0
+        all_attacks = []
         for attacked , attackers in rebuttals_tuples.items():
             st.write(f'* Rebuttal attacks against {attacked}:')
             st.write(attackers.__repr__())
-            st.write("nombre d'occurence:", len(attackers))
+            all_attacks.extend(attackers)
+            st.write("counted :", len(attackers))
             counter += len(attackers)
-        st.write("nombre total d'occurence:", counter)
+        st.write("number of rebuttals attacks:", counter)
+        # total number of attacks undercuts and rebuttals
+        all_attacks.extend(undercuts)
+        st.write("total number of attacks (undercuts and rebuttals):", len(all_attacks))
+    if st.sidebar.button('''# Generate defeats'''):
+        # Generate defeats
+        strict_rules = ag.strict_rules
+        contraposition_rules = ag.create_contrapositions(strict_rules, len(rules))
+        af = ag.ArgumentationFramework(rules + contraposition_rules)
+        attacks = af.get_attacks()
+        undercuts = af.detect_undercuts()
+        rebuttal_attacks = ag.find_rebuttal_attacks(af.get_arguments())
+        for literal, arguments in rebuttal_attacks.items():
+            rebuttal_attacks[literal] = list(set(rebuttal_attacks[literal]))
+        extended_rebuttals = ag.extend_argument_chains(af.get_arguments(), rebuttal_attacks)
+        rebuttals_tuples = ag.tuple_of_rubutlals(extended_rebuttals,af.get_arguments())
+        counter = 0
+        all_attacks = []
+        for attacked , attackers in rebuttals_tuples.items():
+            all_attacks.extend(attackers)
+        all_attacks.extend(undercuts)
+        defeats = ag.find_defeated(all_attacks)
+        st.header("Defeats")
+        #afficher nombre de defaites
+        st.write(defeats.__repr__())
+        st.write("number of defeats:", len(defeats))
+    if st.sidebar.button('''# Generate historgramme'''):
+        strict_rules = ag.strict_rules
+        contraposition_rules = ag.create_contrapositions(strict_rules, len(rules))
+        af = ag.ArgumentationFramework(rules + contraposition_rules)
+        attacks = af.get_attacks()
+        undercuts = af.detect_undercuts()
+        rebuttal_attacks = ag.find_rebuttal_attacks(af.get_arguments())
+        for literal, arguments in rebuttal_attacks.items():
+            rebuttal_attacks[literal] = list(set(rebuttal_attacks[literal]))
+        extended_rebuttals = ag.extend_argument_chains(af.get_arguments(), rebuttal_attacks)
+        rebuttals_tuples = ag.tuple_of_rubutlals(extended_rebuttals,af.get_arguments())
+        counter = 0
+        all_attacks = []
+        for attacked , attackers in rebuttals_tuples.items():
+            all_attacks.extend(attackers)
+        all_attacks.extend(undercuts)
+        defeats = ag.find_defeated(all_attacks)
+        plot = ag.generate_histogram(defeats)
+        st.header("Histogramme")
+        st.pyplot(plot)
+        
 
 if __name__ == "__main__":
     # Initialize an empty list to store rules
