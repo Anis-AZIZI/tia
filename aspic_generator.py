@@ -1,6 +1,6 @@
 
 import itertools
-import networkx as nx
+#import networkx as nx
 import matplotlib.pyplot as plt
 from operator import itemgetter
 
