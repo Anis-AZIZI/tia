@@ -14,6 +14,11 @@ def display_rules(rules):
 def main(rules):
     strict_rules = ag.strict_rules
     defeasible_rules = ag.defeasible_rules
+    st.write('''
+             # Welcome to the Argumentation Framework Generator!
+                ## This is a tool to generate argumentation frameworks using the aspicGenerator library. 
+                #### By AZIZI Anis,BOUDJEBBOUR Maya,RABEHI Amira
+             ''')
     
     # Set up the sidebar
     st.sidebar.header("Add Rule")
