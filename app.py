@@ -96,16 +96,11 @@ def main(rules):
         for literal, arguments in rebuttal_attacks.items():
             rebuttal_attacks[literal] = list(set(rebuttal_attacks[literal]))
         extended_rebuttals = ag.extend_argument_chains(af.get_arguments(), rebuttal_attacks)
-        for literal, arguments in extended_rebuttals.items():
-            st.write(f'* Rebuttal attacks against {literal}:')
-            st.write(extended_rebuttals[literal].__repr__())
-            st.write("nombre d'occurence:", len(extended_rebuttals[literal]))
         rebuttals_tuples = ag.tuple_of_rubutlals(extended_rebuttals,af.get_arguments())
         counter = 0
         all_attacks = []
         for attacked , attackers in rebuttals_tuples.items():
             st.write(f'* Rebuttal attacks against {attacked}:')
-            st.write(attackers.__repr__())
             all_attacks.extend(attackers)
             st.write("counted :", len(attackers))
             counter += len(attackers)
