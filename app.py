@@ -101,7 +101,24 @@ def main(rules):
         all_attacks = []
         for attacked , attackers in rebuttals_tuples.items():
             st.write(f'* Rebuttal attacks against {attacked}:')
-            st.write(attackers.__repr__())
+            for i in range(0, len(attackers), 9):
+                # Create an empty list to store the output for this group of ten tuples
+                output_strings = []
+                # Iterate through ten tuples or the remaining tuples if less than ten
+                for attacker_tuple in attackers[i:i+9]:
+                    # Create an empty string to store the output for this tuple
+                    output_string = "("
+                    # Add each tuple's field names to the output string
+                    for attacker in attacker_tuple:
+                        output_string += attacker.name + ', '  # Assuming 'name' is the attribute you want to print
+                    # Remove the trailing comma and space
+                    output_string = output_string.rstrip(', ')
+                    output_string += ") , "
+                    # Append the output for this tuple to the list
+                    output_strings.append(output_string)
+                # Display the output for this group of ten tuples
+                output_strings[-1] = output_strings[-1].rstrip(', ')
+                st.write(' '.join(output_strings))
 
             all_attacks.extend(attackers)
             st.write("counted :", len(attackers))
