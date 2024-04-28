@@ -154,6 +154,9 @@ def main(rules):
         plot = ag.generate_histogram(defeats)
         st.header("Histogramme")
         st.pyplot(plot)
+        st.header("Argument Graph")
+        graph = ag.create_argument_graph(af.get_arguments(), all_attacks)
+        st.pyplot(graph)
     if st.sidebar.button('''# Burden'''):
         strict_rules = ag.strict_rules
         contraposition_rules = ag.create_contrapositions(strict_rules, len(rules))

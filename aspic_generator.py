@@ -1,6 +1,6 @@
 
 import itertools
-#import networkx as nx
+import networkx as nx
 import matplotlib.pyplot as plt
 from operator import itemgetter
 
@@ -843,3 +843,17 @@ ranked_arguments = af.rank_arguments_with_defeats(burden_numbers)
 #for arg in ranked_arguments:
 #    print(f"Argument: {arg}, Burden: {burden_numbers[arg]}")
 
+def create_argument_graph(arguments, attacks):
+    G = nx.DiGraph()
+    for arg in arguments:
+        G.add_node(arg.name, label=arg.name)
+    for attacker, attacked in attacks:
+        G.add_edge(attacker.name, attacked.name)
+    pos = nx.circular_layout(G)
+    labels = nx.get_node_attributes(G, 'label')
+
+    plt.figure(figsize=(8, 8))
+    nx.draw(G, pos, with_labels=True, labels=labels, node_size=2000, node_color='lightblue',
+            linewidths=0.25, font_size=10, font_weight='bold', arrowsize=20)
+    plt.show()
+    return plt
