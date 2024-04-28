@@ -23,6 +23,7 @@ def main(rules):
              ''')
     
     # Set up the sidebar
+    use_our_set = st.sidebar.checkbox("Use Our Set (Recommended)")
     st.sidebar.header("Add Rule")
 
     # Add form elements to the sidebar
@@ -48,7 +49,7 @@ def main(rules):
     display_rules(rules)
 
     # Option to load rules from aspicGenerator
-    use_our_set = st.sidebar.checkbox("Use Our Set")
+
     if use_our_set:
         # Load rules from aspicGenerator
         rules = []
